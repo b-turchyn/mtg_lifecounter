@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Config(),
+      //home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -54,6 +55,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<Widget> buildLifeCounters() {
+    AppConfig config = GetIt.I<AppConfig>();
+    List<Widget> result = List(config.playerCount);
+
+    for (int i = 0; i < result.length; i++) {
+      result[i] = Expanded(
+        child: LifeCounter(
+          name: "Player $i",
+          startingLife: config.startingLife,
+        ),
+      );
+    }
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -69,17 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
           constraints: BoxConstraints.expand(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: LifeCounter(name: 'Brian', startingLife: 20),
-              ),
-              Expanded(
-                child: LifeCounter(name: 'Josh', startingLife: 20),
-              ),
-              Expanded(
-                child: LifeCounter(name: 'Erin', startingLife: 30),
-              ),
-            ],
+            children: buildLifeCounters(),
           ), // Column
         ), // Container
       ), // SafeArea
