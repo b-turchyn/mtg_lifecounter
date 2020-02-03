@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mtg_lifecounter/screens/lifecounter.dart';
+import 'package:mtg_lifecounter/screens/config.dart';
+import 'package:mtg_lifecounter/models/app_config.dart';
+import 'package:get_it/get_it.dart';
 
-void main() => runApp(MyApp());
+GetIt getIt = GetIt.instance;
+
+void main() {
+  // Register our settings
+  getIt.registerSingleton<AppConfig>(new AppConfig());
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -21,7 +30,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Config(),
     );
   }
 }
@@ -61,9 +70,15 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Expanded(child: LifeCounter(name: 'Brian', startingLife: 20),),
-              Expanded(child: LifeCounter(name: 'Josh', startingLife: 20),),
-              Expanded(child: LifeCounter(name: 'Erin', startingLife: 30),),
+              Expanded(
+                child: LifeCounter(name: 'Brian', startingLife: 20),
+              ),
+              Expanded(
+                child: LifeCounter(name: 'Josh', startingLife: 20),
+              ),
+              Expanded(
+                child: LifeCounter(name: 'Erin', startingLife: 30),
+              ),
             ],
           ), // Column
         ), // Container
