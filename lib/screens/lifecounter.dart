@@ -22,6 +22,8 @@ class _LifeCounterState extends State<LifeCounter> {
   Timer _displayTimeout = null;
   double _diffOpacity = 0.0;
 
+  TextEditingController _playerNameController = TextEditingController();
+
   void startTimer() {
     if (_displayTimeout != null) {
       _displayTimeout.cancel();
@@ -34,10 +36,15 @@ class _LifeCounterState extends State<LifeCounter> {
     });
   }
 
+  void dispose() {
+    _playerNameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Wakelock.enable();
-    _name = widget.name;
+    _name = (_name == null ? widget.name : _name);
     _life = (_life == null ? widget.startingLife : _life);
     return GestureDetector(
       onTapUp: (details) {
@@ -52,12 +59,54 @@ class _LifeCounterState extends State<LifeCounter> {
           }
           startTimer();
         });
+        developer.log('Tap');
+      },
+      onLongPress: () {
+        _playerNameController.text = _name;
+        showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: Text('Lifecounter Config'),
+            content: Container(
+              constraints: BoxConstraints.expand(),
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    controller: _playerNameController,
+                    decoration: InputDecoration(
+                      labelText: 'Player Name',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () {
+                  setState(() {
+                    _name = _playerNameController.text;
+                    developer.log(_playerNameController.text);
+                  });
+                  Navigator.pop(context);
+                },
+                child: new Text('Save'),
+              ),
+              new FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: new Text('Cancel'),
+              ),
+            ],
+          ),
+        );
       },
       child: Container(
         color: Colors.black,
         margin: EdgeInsets.all(4.0),
         constraints: BoxConstraints.expand(),
-        child: Center (
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -96,4 +145,3 @@ class _LifeCounterState extends State<LifeCounter> {
     );
   }
 }
-
