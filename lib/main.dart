@@ -70,6 +70,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return result;
   }
+Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    )) ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,17 +98,46 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          color: Colors.yellow,
-          constraints: BoxConstraints.expand(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: buildLifeCounters(),
-          ), // Column
-        ), // Container
-      ), // SafeArea
-    ); // Scaffold
+    return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+            body: SafeArea(
+                child: Container(
+                    color: Colors.yellow,
+                    constraints: BoxConstraints.expand(),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: buildLifeCounters(),
+                    ), // Column
+                ), // Container
+            ), // SafeArea
+        ), // Scaffold
+    ); // WillPopScope
+  }
+
+  void _showBackDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text("Close Life Counter?"),
+              content: Text("Are you sure?"),
+              actions: <Widget>[
+                new FlatButton(
+                    child: Text("Close"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                ),
+                new FlatButton(
+                    child: Text("Cancel"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                ),
+              ],
+          );
+        },
+    );
   }
 }
