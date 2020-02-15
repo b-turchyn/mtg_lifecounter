@@ -17,27 +17,27 @@ class _ConfigState extends State<Config> {
   void initPlayerCount() {
     if (_selectedPlayers == null) {
       AppConfig config = GetIt.I<AppConfig>();
-      List<int> options = AppConfig.PLAYER_COUNT_OPTS;
-      _selectedPlayers = List.filled(options.length, false);
-      for (int i = 0; i < options.length; i++) {
-        if (config.playerCount == options[i]) {
-          _selectedPlayers[0] = true;
-        }
-      }
+      _selectedPlayers = _initOption(AppConfig.PLAYER_COUNT_OPTS, config.playerCount);
     }
   }
 
   void initStartingLife() {
     if (_selectedStartingLife == null) {
       AppConfig config = GetIt.I<AppConfig>();
-      List<int> options = AppConfig.STARTING_LIFE_OPTS;
-      _selectedStartingLife = List.filled(options.length, false);
-      for (int i = 0; i < options.length; i++) {
-        if (config.playerCount == options[i]) {
-          _selectedStartingLife[0] = true;
-        }
+      _selectedStartingLife = _initOption(AppConfig.STARTING_LIFE_OPTS, config.startingLife);
+    }
+  }
+
+  List<bool> _initOption(List<int> options, int value) {
+    List<bool> result = List.filled(options.length, false);
+
+    for (int i = 0; i < options.length; i++) {
+      if (value == options[i]) {
+        result[i] = true;
       }
     }
+
+    return result;
   }
 
   List<Widget> buildTextList(List<dynamic> options) {
